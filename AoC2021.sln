@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AocTest", "AocTest\AocTest.csproj", "{24C0C493-C3F2-4981-A83F-C4D27A98940B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AocLib", "AocLib\AocLib.csproj", "{0A2FA9C0-72C7-4026-A782-9BAA17BA0E86}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24C0C493-C3F2-4981-A83F-C4D27A98940B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C0C493-C3F2-4981-A83F-C4D27A98940B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C0C493-C3F2-4981-A83F-C4D27A98940B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C0C493-C3F2-4981-A83F-C4D27A98940B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A2FA9C0-72C7-4026-A782-9BAA17BA0E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A2FA9C0-72C7-4026-A782-9BAA17BA0E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A2FA9C0-72C7-4026-A782-9BAA17BA0E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A2FA9C0-72C7-4026-A782-9BAA17BA0E86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
