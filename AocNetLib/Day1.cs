@@ -31,7 +31,8 @@ namespace AocNetLib
 
         private static int[] ParseInput(string input)
         {
-            return input.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x.Trim())).ToArray();
+            return input.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => int.Parse(x.Trim())).ToArray();
         }
     }
 }
