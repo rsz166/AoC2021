@@ -56,7 +56,7 @@ namespace AocNetTest
             Day6 solver = new Day6();
             string output = solver.Solve(input, 256);
             Console.WriteLine(output);
-            //Assert.AreEqual("375482", output);
+            Assert.AreEqual("1689540415957", output);
         }
     }
 }

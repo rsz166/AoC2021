@@ -19,34 +19,29 @@
 
         class School
         {
-            List<int> school = new List<int>();
+            long[] schoolGroups;
 
-            public int Count => school.Count;
+            public long Count => schoolGroups.Sum();
 
             public School(IEnumerable<int> list)
             {
-                school.AddRange(list);
+                schoolGroups = new long[9];
+                foreach (int i in list)
+                {
+                    schoolGroups[i]++;
+                }
             }
 
             public void Iterate()
             {
-                int newCnt = 0;
-                for (int i = 0; i < school.Count; i++)
+                long zeros = schoolGroups[0];
+                for (int i = 1; i < schoolGroups.Length; i++)
                 {
-                    if(school[i] == 0)
-                    {
-                        newCnt++;
-                        school[i] = 6;
-                    }
-                    else
-                    {
-                        school[i]--;
-                    }
+                    schoolGroups[i - 1] = schoolGroups[i];
                 }
-                for (int i = 0; i < newCnt; i++)
-                {
-                    school.Add(8);
-                }
+                schoolGroups[schoolGroups.Length - 1] = 0;
+                schoolGroups[8] += zeros;
+                schoolGroups[6] += zeros;
             }
         }
     }
