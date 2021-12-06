@@ -15,6 +15,21 @@
             //map.PlotMap();
             return map.GetDangerous().ToString();
         }
+
+        public string Solve2(string input)
+        {
+            var lines = ParseInput(input);
+            int max = lines.Max(x => x.Max);
+            var map = new Map(max + 1);
+            map.DrawLines(lines);
+            //foreach (var line in lines)
+            //{
+            //    Console.WriteLine(line);
+            //}
+            //map.PlotMap();
+            return map.GetDangerous().ToString();
+        }
+
         static Line[] ParseInput(string input)
         {
             var lines = input.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
@@ -67,17 +82,13 @@
             {
                 int x = line.X1;
                 int y = line.Y1;
-                int xStep = line.X2 > x ? 1 : -1;
-                int yStep = line.Y2 > y ? 1 : -1;
+                int xStep = line.X2 > x ? 1 : (line.X2 < x ? -1 : 0);
+                int yStep = line.Y2 > y ? 1 : (line.Y2 < y ? -1 : 0);
 
                 DrawPoint(x, y);
-                while (x != line.X2)
+                while ((x != line.X2) || (y != line.Y2))
                 {
                     x += xStep;
-                    DrawPoint(x, y);
-                }
-                while (y != line.Y2)
-                {
                     y += yStep;
                     DrawPoint(x, y);
                 }
