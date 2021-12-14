@@ -23,33 +23,53 @@ namespace AocNetLib
 
         class Polymer
         {
-            List<char> list;
-            Dictionary<string, char> rules;
+            long[] pairCounts;
+            int[,] ruleTable;
+            List<string> indexes;
 
             public Polymer(string str, Dictionary<string, char> rules)
             {
-                list = new List<char>(str);
-                this.rules = rules;
+                int size = rules.Count;
+                pairCounts = new long[size];
+                ruleTable = new int[size, 2];
+                indexes = rules.Keys.ToList();
+                for (int i = 0; i < size; i++)
+                {
+                    var rule = rules.ElementAt(i);
+                    var part1 = indexes.IndexOf(String.Concat(rule.Key[0], rule.Value));
+                    var part2 = indexes.IndexOf(String.Concat(rule.Value, rule.Key[1]));
+                    ruleTable[i, 0] = part1;
+                    ruleTable[i, 1] = part2;
+                }
+                for (int i = 0; i < str.Length-1; i++)
+                {
+                    var idx = indexes.IndexOf(str.Substring(i, 2));
+                    pairCounts[idx]++;
+                }
             }
 
             public void Iterate()
             {
-                for (int i = 1; i < list.Count; i++)
+                var countsCopy = pairCounts.ToArray();
+                for (int i = 0; i < countsCopy.Length; i++)
                 {
-                    string key = string.Concat(list[i - 1], list[i]);
-                    if (rules.TryGetValue(key, out char value))
-                    {
-                        list.Insert(i, value);
-                    }
-                    i++;
+                    pairCounts[i] -= countsCopy[i];
+                    pairCounts[ruleTable[i, 0]] += countsCopy[i];
+                    pairCounts[ruleTable[i, 1]] += countsCopy[i];
                 }
             }
 
             public long GetCountDiff()
             {
-                var counts = list.GroupBy(x=>x).Select(x=>x.LongCount());
-                var max = counts.Max();
-                var min = counts.Min();
+                long[] chars = new long['Z' - 'A' + 1];
+                for (int i = 0; i < indexes.Count; i++)
+                {
+                    var s = indexes[i];
+                    chars[s[0] - 'A'] += pairCounts[i];
+                    chars[s[1] - 'A'] += pairCounts[i];
+                }
+                var max = (chars.Max()+1)/2;
+                var min = (chars.Where(x=>x!=0).Min()+1)/2;
                 return max - min;
             }
         }

@@ -81,7 +81,7 @@ CN -> C";
             var solver = new Day14();
             string output = solver.Solve(input, 40);
             Console.WriteLine(output);
-            //Assert.AreEqual("153592", output);
+            Assert.AreEqual("2959788056211", output);
         }
     }
 }
