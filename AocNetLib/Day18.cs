@@ -32,9 +32,9 @@
             {
                 for (int j = 0; j < nums.Length; j++)
                 {
-                    if(i!=j)
+                    if (i != j)
                     {
-                        var result = new Number { Ref1 = nums[i], Ref2 = nums[j] };
+                        var result = new Number { Ref1 = nums[i].Copy(), Ref2 = nums[j].Copy() };
                         result.Reduce();
                         var magn = result.GetMagnitude();
                         if (magn > max)
@@ -67,9 +67,9 @@
         private Number ParseLineRecursive(string line, ref int idx)
         {
             Number num = new Number();
-            while(idx < line.Length)
+            while (idx < line.Length)
             {
-                switch(line[idx])
+                switch (line[idx])
                 {
                     case '[':
                         idx++;
@@ -87,7 +87,7 @@
                         while (char.IsNumber(line[idx + len])) len++;
                         num.IsValue = true;
                         num.Value = int.Parse(line.Substring(idx, len));
-                        idx+=len;
+                        idx += len;
                         return num;
                 }
             }
@@ -134,7 +134,7 @@
                 {
                     if (Ref1.IsValue == false || Ref2.IsValue == false) throw new ArgumentException("Exploding non-value pair");
                     var left = FindLeft();
-                    if(left != null)
+                    if (left != null)
                     {
                         left.Value += Ref1.Value;
                     }
@@ -149,8 +149,8 @@
                     Ref2 = null;
                     return true;
                 }
-                if(Ref1.TryExplode(depth + 1)) return true;
-                if(Ref2.TryExplode(depth + 1)) return true;
+                if (Ref1.TryExplode(depth + 1)) return true;
+                if (Ref2.TryExplode(depth + 1)) return true;
                 return false;
             }
 
@@ -193,6 +193,22 @@
                 if (Ref1.TrySplit()) return true;
                 if (Ref2.TrySplit()) return true;
                 return false;
+            }
+
+            public Number Copy()
+            {
+                var ret = new Number();
+                if (IsValue)
+                {
+                    ret.IsValue = true;
+                    ret.Value = Value;
+                }
+                else
+                {
+                    ret.Ref1 = Ref1.Copy();
+                    ret.Ref2 = Ref2.Copy();
+                }
+                return ret;
             }
         }
     }
