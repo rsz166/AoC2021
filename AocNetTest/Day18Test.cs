@@ -128,7 +128,7 @@ namespace AocNetTest
             var solver = GetSolver();
             string output = solver.Solve2(GetFinalInput());
             Console.WriteLine(output);
-            Assert.IsTrue(int.Parse(output) > 4585);
+            Assert.AreEqual("4647", output);
         }
     }
 }
