@@ -52,7 +52,7 @@ namespace AocNetTest
             var solver = GetSolver();
             string output = solver.Solve(GetFinalInput(), 50);
             Console.WriteLine(output);
-            //Assert.AreEqual("4647", output);
+            Assert.AreEqual("15287", output);
         }
     }
 }
