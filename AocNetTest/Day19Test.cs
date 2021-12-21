@@ -170,9 +170,18 @@ namespace AocNetTest
         public void Final1()
         {
             var solver = GetSolver();
-            string output = solver.Solve(GetFinalInput());
+            string output = solver.Solve(GetFinalInput(), true);
             Console.WriteLine(output);
-            Assert.AreEqual("2541", output);
+            Assert.AreEqual("483", output);
+        }
+
+        [TestMethod]
+        public void Final2()
+        {
+            var solver = GetSolver();
+            string output = solver.Solve2(GetFinalInput(), true);
+            Console.WriteLine(output);
+            Assert.AreEqual("14804", output);
         }
     }
 }

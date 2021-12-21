@@ -1,12 +1,52 @@
-﻿namespace AocNetLib
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AocNetLib
 {
     public class Day19
     {
+        readonly int[] FinalSolutionD = new int[] { 0, 4, 9, 21, 22, 11, 6, 5, 2, 23, 8, 13, 18, 10, 19, 17, 20, 15, 12, 1, 16, 7, 14, 3, 6, 3, 10, 8, 21, 11, 12, 0, 9, 5, 5, 22, 5, 16, 12, 10 };
 
+        void UpdateDirections(List<Scanner> scanners)
+        {
+            for (int i = 1; i < scanners.Count; i++)
+            {
+                scanners[i].UpdateDirection(FinalSolutionD[i]);
+            }
+        }
 
-        public string Solve(string v)
+        public string Solve(string v, bool isFinal = false)
         {
             var scanners = ParseInput(v);
+            if(isFinal) UpdateDirections(scanners);
+            Scanner merged = MergeScanners(scanners, isFinal);
+            return merged.Beacons.Count.ToString();
+        }
+
+        public string Solve2(string v, bool isFinal = false)
+        {
+            var scanners = ParseInput(v);
+            if(isFinal) UpdateDirections(scanners);
+            Scanner merged = MergeScanners(scanners, isFinal);
+            int max = GetMaxDist(scanners);
+            return max.ToString();
+        }
+
+        private static int GetMaxDist(List<Scanner> scanners)
+        {
+            int max = 0;
+            for (int i = 0; i < scanners.Count; i++)
+            {
+                for (int j = 0; j < scanners.Count; j++)
+                {
+                    int d = scanners[i].GetDistance(scanners[j]);
+                    if (d > max) max = d;
+                }
+            }
+            return max;
+        }
+
+        private static Scanner MergeScanners(List<Scanner> scanners, bool isFinal)
+        {
             Scanner merged = new Scanner(-1) { IsAligned = true };
             scanners[0].IsAligned = true;
             scanners[0].UpdateDirection(0);
@@ -16,14 +56,14 @@
                 var notMerged = scanners.Where(x => !x.IsAligned).ToList();
                 foreach (var sc in notMerged)
                 {
-                    if(merged.TryAlign(sc))
+                    if (merged.TryAlign(sc, isFinal))
                     {
                         sc.IsAligned = true;
                         merged.MergeFrom(sc);
                     }
                 }
             } while (!scanners.All(x => x.IsAligned));
-            return merged.Beacons.Count.ToString();
+            return merged;
         }
 
         private List<Scanner> ParseInput(string input)
@@ -50,6 +90,7 @@
 
         class Scanner
         {
+            List<Distance> distances;
             public Scanner(int idx)
             {
                 Idx = idx;
@@ -74,22 +115,35 @@
                 }
             }
 
-            internal bool TryAlign(Scanner sc)
+            internal bool TryAlign(Scanner sc, bool isFinal)
             {
-                for (int i = 0; i < 24; i++)
+                if (isFinal)
                 {
-                    sc.UpdateDirection(i);
-                    foreach (var baseBeacon in Beacons)
+                    if (CheckAlign(sc)) return true;
+                }
+                else
+                {
+                    for (int i = 0; i < 24; i++)
                     {
-                        foreach (var oppBeacon in sc.Beacons)
-                        {
-                            sc.X = X + baseBeacon.AbsX - oppBeacon.TransfX;
-                            sc.Y = Y + baseBeacon.AbsY - oppBeacon.TransfY;
-                            sc.Z = Z + baseBeacon.AbsZ - oppBeacon.TransfZ;
-                            int cnt = CountMatching(sc);
-                            if (cnt > 1) Console.WriteLine($"Sc:{sc.Idx} Dir:{i} Match:{cnt}");
-                            if (cnt >= 12) return true;
-                        }
+                        sc.UpdateDirection(i);
+                        if (CheckAlign(sc)) return true;
+                    }
+                }
+                return false;
+            }
+
+            bool CheckAlign(Scanner sc)
+            {
+                foreach (var baseBeacon in Beacons)
+                {
+                    foreach (var oppBeacon in sc.Beacons)
+                    {
+                        sc.X = X + baseBeacon.AbsX - oppBeacon.TransfX;
+                        sc.Y = Y + baseBeacon.AbsY - oppBeacon.TransfY;
+                        sc.Z = Z + baseBeacon.AbsZ - oppBeacon.TransfZ;
+                        int cnt = CountMatching(sc);
+                        if (cnt > 1) Console.WriteLine($"Sc:{sc.Idx} Dir:{sc.D} Match:{cnt} Pos:{sc.X},{sc.Y},{sc.Z}");
+                        if (cnt >= 12) return true;
                     }
                 }
                 return false;
@@ -109,6 +163,24 @@
             {
                 D = d;
                 Beacons.ForEach(x => x.UpdateAbs());
+            }
+
+            public void UpdateDistances()
+            {
+                List<Distance> dist = new List<Distance>();
+                for(int i = 0; i < Beacons.Count; i++)
+                {
+                    for (int j = i+1; j < Beacons.Count; j++)
+                    {
+                        dist.Add(Beacons[i] - Beacons[j]);
+                    }
+                }
+                distances = dist.OrderBy(x => x.D).ToList();
+            }
+
+            public int GetDistance(Scanner sc)
+            {
+                return Math.Abs(X - sc.X) + Math.Abs(Y - sc.Y) + Math.Abs(Z - sc.Z);
             }
         }
 
@@ -143,6 +215,11 @@
             {
                 return b.AbsX == AbsX && b.AbsY == AbsY && b.AbsZ == AbsZ;
             }
+
+            public static Distance operator -(Beacon a, Beacon b)
+            {
+                return new Distance(a, b);
+            }
         }
 
         static class Transform
@@ -175,6 +252,49 @@
                 sign = ((sign >> 2) ^ (sign >> 1) ^ sign) & 1;
                 if(sign == 1) z1 = -z1;
                 return (x1, y1, z1);
+            }
+        }
+
+        struct Distance
+        {
+            public int x, y, z;
+            Beacon a, b;
+
+            public Distance(Beacon a, Beacon b)
+            {
+                this.a = a;
+                this.b = b;
+                x = a.AbsX - b.AbsX;
+                y = a.AbsY - b.AbsY;
+                z = a.AbsZ - b.AbsZ;
+            }
+
+            public int D => Math.Abs(x) + Math.Abs(y)+ Math.Abs(z);
+
+            // lazy comparison for fast filtering
+            public static bool operator ==(Distance a, Distance b)
+            {
+                if(Math.Abs(a.D) != Math.Abs(b.D)) return false;
+                int ax = Math.Abs(a.x);
+                int ay = Math.Abs(a.y);
+                int az = Math.Abs(a.z);
+                int bx = Math.Abs(b.x);
+                int by = Math.Abs(b.y);
+                int bz = Math.Abs(b.z);
+                if (ax != bx || ax != by || ax != bz) return false;
+                if (ay != bx || ay != by || ay != bz) return false;
+                if (az != bx || az != by || az != bz) return false;
+                return true;
+            }
+
+            public static bool operator !=(Distance a, Distance b)
+            {
+                return !(a == b);
+            }
+
+            public override bool Equals([NotNullWhen(true)] object? obj)
+            {
+                return base.Equals(obj);
             }
         }
     }
