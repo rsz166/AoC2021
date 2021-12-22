@@ -31,18 +31,18 @@ Player 2 starting position: 8"));
         [TestMethod]
         public void Test2()
         {
-            //var solver = GetSolver();
-//            Assert.AreEqual("444356092776315", solver.Solve2(@"Player 1 starting position: 4
-//Player 2 starting position: 8"));
+            var solver = GetSolver();
+            Assert.AreEqual("444356092776315", solver.Solve2(@"Player 1 starting position: 4
+Player 2 starting position: 8"));
         }
 
         [TestMethod]
         public void Final2()
         {
-            //var solver = GetSolver();
-            //string output = solver.Solve2(GetFinalInput());
-            //Console.WriteLine(output);
-            //Assert.AreEqual("4647", output);
+            var solver = GetSolver();
+            string output = solver.Solve2(GetFinalInput());
+            Console.WriteLine(output);
+            Assert.AreEqual("274291038026362", output);
         }
     }
 }
