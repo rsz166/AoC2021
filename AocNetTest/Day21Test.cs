@@ -36,21 +36,13 @@ Player 2 starting position: 8"));
 Player 2 starting position: 8"));
         }
 
-
-        [TestMethod]
-        public void Test2_1()
-        {
-            var solver = GetSolver();
-            Assert.AreEqual("", solver.Solve2(@"Player 1 starting position: 2
-Player 2 starting position: 1"));
-        }
         [TestMethod]
         public void Final2()
         {
             var solver = GetSolver();
             string output = solver.Solve2(GetFinalInput());
             Console.WriteLine(output);
-            //Assert.AreEqual("4647", output);
+            Assert.AreEqual("274291038026362", output);
         }
     }
 }
