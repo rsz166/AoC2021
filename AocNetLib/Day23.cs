@@ -4,29 +4,24 @@
     {
         public string Solve(string v)
         {
-            //var absSolver = AbstractSolver.ParseInput(v);
-            //var absSolutions = absSolver.Solve();
             var solver = Solver2.ParseInput(v);
-            int minResult = int.MaxValue;
-            //foreach (var absSol in absSolutions)
-            //var absSol = absSolutions.First();
-            {
-                int result = solver.Solve();
-                if(result < minResult) minResult = result;
-            }
+            int minResult = solver.Solve();
             return minResult.ToString();
         }
 
         public string Solve2(string v)
         {
-            throw new NotImplementedException();
+            var solver = Solver2.ParseInput(v, new string[] { "  #D#C#B#A#","  #D#B#A#C#"});
+            int minResult = solver.Solve();
+            return minResult.ToString();
         }
 
         public class Solver2
         {
             const int BuffY = 1;
             const int Width = 13;
-            const int Height = 5;
+            const int DefaultHeight = 5;
+            readonly int Height = 5;
 #if DEBUG_MSG
             static int GlobalCounter = 0;
 #endif
@@ -40,8 +35,9 @@
             List<(List<(int, int, int, int)>, int)> solutions;
 #endif
 
-            public Solver2()
+            public Solver2(int height)
             {
+                Height = height;
                 initFields = new char[Height, Width];
                 fields = new char[Height, Width];
                 bufferPositions = new List<int>() { 1, 2, 4, 6, 8, 10, 11 };
@@ -272,20 +268,52 @@
                 }
             }
 
-            public static Solver2 ParseInput(string input)
+            public override string ToString()
             {
-                var lines = input.TrimEnd().Split('\n').Select(x => x.TrimEnd()).ToArray();
-                var ret = new Solver2();
+                var sb = new System.Text.StringBuilder();
                 for (int i = 0; i < Height; i++)
                 {
                     for (int j = 0; j < Width; j++)
                     {
-                        char c = j < lines[i].Length ? lines[i][j] : '#';
-                        if (c == ' ') c = '#';
-                        ret.initFields[i, j] = c;
+                        sb.Append(fields[i, j]);
+                    }
+                    sb.AppendLine();
+                }
+                return sb.ToString();
+            }
+
+            public static Solver2 ParseInput(string input, string[] injected = null)
+            {
+                var lines = input.TrimEnd().Split('\n').Select(x => x.TrimEnd()).ToArray();
+                var ret = new Solver2(DefaultHeight + (injected?.Length ?? 0));
+                int row = 0;
+                int inputRow = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    ParseLine(lines[inputRow++], ret, row++);
+                }
+                if(injected != null)
+                {
+                    for (int i = 0; i < injected.Length; i++)
+                    {
+                        ParseLine(injected[i], ret, row++);
                     }
                 }
+                for (int i = 3; i < lines.Length; i++)
+                {
+                    ParseLine(lines[i], ret, row++);
+                }
                 return ret;
+            }
+
+            private static void ParseLine(string line, Solver2 ret, int row)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    char c = j < line.Length ? line[j] : '#';
+                    if (c == ' ') c = '#';
+                    ret.initFields[row, j] = c;
+                }
             }
         }
     }
