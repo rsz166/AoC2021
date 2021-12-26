@@ -15,7 +15,7 @@
         {
             AluSolver[] AluParts;
             Alu AluComplete;
-            List<(int, int, int)>[] solutions;
+            List<AluState>[] solutions;
 
             public Decrypter(string code)
             {
@@ -27,7 +27,7 @@
                 int prevStart = 0;
                 for (int i = 0; i < prog.Count; i++)
                 {
-                    if(prog[i][0] == "inp")
+                    if (prog[i][0] == "inp")
                     {
                         int len = i - prevStart;
                         if (len == 0) continue;
@@ -36,7 +36,7 @@
                     }
                 }
                 AluParts[partIdx] = new AluSolver(prog.Skip(prevStart).ToList());
-                solutions = new List<(int, int, int)>[cnt];
+                solutions = new List<AluState>[cnt];
             }
 
             public void CollectSolutions()
@@ -45,13 +45,14 @@
                 {
                     List<int> whitelist;
                     if (digit == AluParts.Length - 1) whitelist = new List<int>() { 0 };
-                    else whitelist = solutions[digit + 1].Select(x => x.Item2).Distinct().ToList();
+                    else whitelist = solutions[digit + 1].Select(x => x.in_z).Distinct().ToList();
                     Console.WriteLine($"Digit {digit} whitelist: {{0}}", string.Join(" ", whitelist));
                     var sol = AluParts[digit].ExpectOutput(whitelist);
                     solutions[digit] = sol;
                     Console.WriteLine($"Digit {digit} done");
-                    File.WriteAllLines($"sol{digit}.txt", sol.Select(x => $"{x.Item1}\t{x.Item2}\t{x.Item3}"));
+                    //File.WriteAllLines($"sol{digit}.txt", sol.Select(x => $"{x.in_arg}\t{x.in_z}\t{x.out_z}"));
                 }
+                Console.WriteLine("Start Z's: {0}", string.Join(" ", solutions[0].Select(x => x.in_z).Distinct()));
             }
 
             public void MergeSolutions()
@@ -60,8 +61,8 @@
                 {
                     for (int i = 0; i < solutions[digit].Count; i++)
                     {
-                        var solIn = solutions[digit][i].Item2;
-                        if (!solutions[digit-1].Any(x=>x.Item3 == solIn))
+                        var solIn = solutions[digit][i].in_z;
+                        if (!solutions[digit - 1].Any(x => x.out_z == solIn))
                         {
                             solutions[digit].RemoveAt(i);
                             i--;
@@ -69,25 +70,25 @@
                     }
                 }
                 Console.WriteLine(string.Join(Environment.NewLine, solutions.Select(sol =>
-                    string.Join(" ", sol.Select(s => s.Item1))
+                    string.Join(" ", sol.Select(s => s.in_arg))
                 )));
             }
 
             public int[] GetMax()
             {
                 int[] solArgs = new int[solutions.Length];
-                IEnumerable<(int, int, int)> prevDigit = new List<(int, int, int)>() { (0, 0, 0) };
+                IEnumerable<AluState> prevDigit = new List<AluState>() { new AluState(0, 0, 0) };
                 for (int i = 0; i < solArgs.Length; i++)
                 {
-                    IEnumerable<(int, int, int)> sol = solutions[i];
-                    if(prevDigit != null)
+                    IEnumerable<AluState> sol = solutions[i];
+                    if (prevDigit != null)
                     {
-                        sol = sol.Where(n => prevDigit.Any(p => p.Item3 == n.Item2));
+                        sol = sol.Where(n => prevDigit.Any(p => p.out_z == n.in_z));
                     }
                     if (sol.Count() == 0) throw new Exception("No solution");
-                    int maxArg = sol.Max(x => x.Item1);
+                    int maxArg = sol.Max(x => x.in_arg);
                     solArgs[i] = maxArg;
-                    prevDigit = sol.Where(x=>x.Item1 == maxArg).ToList();
+                    prevDigit = sol.Where(x => x.in_arg == maxArg).ToList();
                 }
                 return solArgs;
             }
@@ -177,7 +178,7 @@
         class AluSolver : Alu
         {
             const int ZMax = 100000;
-            const int ZMin = -10000;
+            const int ZMin = -100000;
             const int ArgMin = 1;
             const int ArgMax = 9;
 
@@ -187,27 +188,35 @@
 
             int TryInput(int initZ, int arg)
             {
-                Reset(z:initZ);
+                Reset(z: initZ);
                 Execute(new int[] { arg });
                 return z;
             }
 
-            /// <summary>
-            /// </summary>
-            /// <param name="outputs">Whitelist for outputs</param>
-            /// <returns>(arg,prev z,output z)</returns>
-            public List<(int, int, int)> ExpectOutput(List<int> outputs)
+            public List<AluState> ExpectOutput(List<int> outputs)
             {
-                var ret = new List<(int, int, int)>();
+                var ret = new List<AluState>();
                 for (int initZ = ZMin; initZ <= ZMax; initZ++)
                 {
                     for (int arg = ArgMin; arg <= ArgMax; arg++)
                     {
                         var result = TryInput(initZ, arg);
-                        if (outputs.Contains(result)) ret.Add((arg, initZ, result));
+                        if (outputs.Contains(result)) ret.Add(new AluState(arg, initZ, result));
                     }
                 }
                 return ret;
+            }
+        }
+
+        struct AluState
+        {
+            public int in_arg, in_z, out_z;
+
+            public AluState(int in_arg, int in_z, int out_z)
+            {
+                this.in_arg = in_arg;
+                this.in_z = in_z;
+                this.out_z = out_z;
             }
         }
     }
