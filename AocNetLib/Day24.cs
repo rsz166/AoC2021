@@ -2,337 +2,27 @@
 {
     public class Day24
     {
-        public string Solve(string code, params int[] args)
+        public string Solve(string code)
         {
-            var prog = code.TrimEnd().Split('\n').Select(x => x.TrimEnd().Split(' ')).ToList();
-            var alu = new Alu(prog);
-            alu.Execute(args);
-            return alu.ToString();
+            var dec = new Decrypter(code);
+            dec.CollectSolutions();
+            var result = dec.GetMax();
+            dec.Verify(result);
+            return string.Concat(result);
         }
 
-        public bool Solve1(params int[] args)
+        class Decrypter
         {
-            int argIdx = 0;
-            int w = 0, x = 0, y = 0, z = 0; w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 11;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 8;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 14;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 13;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 10;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 2;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += 0;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 7;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 12;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 11;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 12;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 4;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 12;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 13;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += -8;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 13;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += -9;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 10;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 1;
-            x += 11;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 1;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += 0;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 2;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += -5;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 14;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += -6;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 6;
-            y *= x;
-            z += y;
-            w = args[argIdx++];
-            x *= 0;
-            x += z;
-            x %= 26;
-            z /= 26;
-            x += -12;
-            x = x == w ? 1 : 0;
-            x = x == 0 ? 1 : 0;
-            y *= 0;
-            y += 25;
-            y *= x;
-            y += 1;
-            z *= y;
-            y *= 0;
-            y += w;
-            y += 14;
-            y *= x;
-            z += y;
-            return z == 0;
-        }
-
-        int[,] par = new int[14, 3]
-        {
-            {1,11,8  },
-            {1,14,13 },
-            {1,10,2  },
-            {26,0,7  },
-            {1,12,11 },
-            {1,12,4  },
-            {1,12,13 },
-            {26,-8,13},
-            {26,-9,10},
-            {1,11,1  },
-            {26,0,2  },
-            {26,-5,14},
-            {26,-6,6 },
-            {26,-12,1}
-        };
-
-        public bool Solve2(int[] args)
-        {
-            int z = 0;
-            for (int i = 0; i < args.Length; i++)
-            {
-                z = (args[i] != (z % 26 + par[i, 1])) ? (z / par[i, 0] * (26) + (args[i] + par[i, 2])) : z;
-            }
-            return z == 0;
-        }
-
-        public Day24()
-        {
-        }
-
-        Alu alu;
-
-        public Day24(string code)
-        {
-            var prog = code.Trim().Split('\n').Select(x => x.TrimEnd().Split(' ')).ToList();
-            alu = new Alu(prog);
-        }
-
-        public void Reset()
-        {
-            alu.Reset();
-        }
-
-        public int Solve3(int initZ, params int[] args)
-        {
-            alu.Reset();
-            alu.z = initZ;
-            alu.Execute(args);
-            return alu.z;
-        }
-
-        class Decripter
-        {
-            Alu[] AluParts;
+            AluSolver[] AluParts;
             Alu AluComplete;
-            List<List<(int, int)>> solutions;
+            List<(int, int, int)>[] solutions;
 
-            public Decripter(string code)
+            public Decrypter(string code)
             {
                 var prog = code.Trim().Split('\n').Select(x => x.TrimEnd().Split(' ')).ToList();
                 AluComplete = new Alu(prog);
                 int cnt = prog.Count(x => x[0] == "inp");
-                AluParts = new Alu[cnt];
+                AluParts = new AluSolver[cnt];
                 int partIdx = 0;
                 int prevStart = 0;
                 for (int i = 0; i < prog.Count; i++)
@@ -341,18 +31,72 @@
                     {
                         int len = i - prevStart;
                         if (len == 0) continue;
-                        AluParts[partIdx] = new Alu(prog.Skip(prevStart).Take(len).ToList());
+                        AluParts[partIdx++] = new AluSolver(prog.Skip(prevStart).Take(len).ToList());
+                        prevStart = i;
                     }
                 }
-                solutions=new List<List<(int, int)>>();
+                AluParts[partIdx] = new AluSolver(prog.Skip(prevStart).ToList());
+                solutions = new List<(int, int, int)>[cnt];
             }
 
-            int TryInput(int initZ, int arg)
+            public void CollectSolutions()
             {
-                alu.Reset();
-                alu.z = initZ;
-                alu.Execute(args);
-                return alu.z
+                for (int digit = AluParts.Length - 1; digit >= 0; digit--)
+                {
+                    List<int> whitelist;
+                    if (digit == AluParts.Length - 1) whitelist = new List<int>() { 0 };
+                    else whitelist = solutions[digit + 1].Select(x => x.Item2).Distinct().ToList();
+                    Console.WriteLine($"Digit {digit} whitelist: {{0}}", string.Join(" ", whitelist));
+                    var sol = AluParts[digit].ExpectOutput(whitelist);
+                    solutions[digit] = sol;
+                    Console.WriteLine($"Digit {digit} done");
+                    File.WriteAllLines($"sol{digit}.txt", sol.Select(x => $"{x.Item1}\t{x.Item2}\t{x.Item3}"));
+                }
+            }
+
+            public void MergeSolutions()
+            {
+                for (int digit = 1; digit < solutions.Length; digit++)
+                {
+                    for (int i = 0; i < solutions[digit].Count; i++)
+                    {
+                        var solIn = solutions[digit][i].Item2;
+                        if (!solutions[digit-1].Any(x=>x.Item3 == solIn))
+                        {
+                            solutions[digit].RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+                Console.WriteLine(string.Join(Environment.NewLine, solutions.Select(sol =>
+                    string.Join(" ", sol.Select(s => s.Item1))
+                )));
+            }
+
+            public int[] GetMax()
+            {
+                int[] solArgs = new int[solutions.Length];
+                IEnumerable<(int, int, int)> prevDigit = new List<(int, int, int)>() { (0, 0, 0) };
+                for (int i = 0; i < solArgs.Length; i++)
+                {
+                    IEnumerable<(int, int, int)> sol = solutions[i];
+                    if(prevDigit != null)
+                    {
+                        sol = sol.Where(n => prevDigit.Any(p => p.Item3 == n.Item2));
+                    }
+                    if (sol.Count() == 0) throw new Exception("No solution");
+                    int maxArg = sol.Max(x => x.Item1);
+                    solArgs[i] = maxArg;
+                    prevDigit = sol.Where(x=>x.Item1 == maxArg).ToList();
+                }
+                return solArgs;
+            }
+
+            internal void Verify(int[] args)
+            {
+                AluComplete.Reset();
+                AluComplete.Execute(args);
+                if (AluComplete.z != 0) throw new Exception("Wrong result");
             }
         }
 
@@ -421,12 +165,49 @@
                 return $"{w} {x} {y} {z}";
             }
 
-            internal void Reset()
+            internal void Reset(int w = 0, int x = 0, int y = 0, int z = 0)
             {
-                w = 0;
-                x = 0;
-                y = 0;
-                z = 0;
+                this.w = w;
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+        }
+
+        class AluSolver : Alu
+        {
+            const int ZMax = 100000;
+            const int ZMin = -10000;
+            const int ArgMin = 1;
+            const int ArgMax = 9;
+
+            public AluSolver(List<string[]> prog) : base(prog)
+            {
+            }
+
+            int TryInput(int initZ, int arg)
+            {
+                Reset(z:initZ);
+                Execute(new int[] { arg });
+                return z;
+            }
+
+            /// <summary>
+            /// </summary>
+            /// <param name="outputs">Whitelist for outputs</param>
+            /// <returns>(arg,prev z,output z)</returns>
+            public List<(int, int, int)> ExpectOutput(List<int> outputs)
+            {
+                var ret = new List<(int, int, int)>();
+                for (int initZ = ZMin; initZ <= ZMax; initZ++)
+                {
+                    for (int arg = ArgMin; arg <= ArgMax; arg++)
+                    {
+                        var result = TryInput(initZ, arg);
+                        if (outputs.Contains(result)) ret.Add((arg, initZ, result));
+                    }
+                }
+                return ret;
             }
         }
     }
